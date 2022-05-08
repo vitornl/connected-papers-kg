@@ -2,4 +2,4 @@ outs:
 - md5: 8a926e18dfb3a1552128bc4c0fd81cd9.dir
   size: 155471
   nfiles: 116
-  path: scrapped
+  path: scraped
