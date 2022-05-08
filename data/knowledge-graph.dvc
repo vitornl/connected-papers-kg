@@ -1,0 +1,5 @@
+outs:
+- md5: 10028ddbb5bc75dd72d2607b2e7933e0.dir
+  size: 734947
+  nfiles: 6
+  path: knowledge-graph

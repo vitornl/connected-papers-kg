@@ -1,0 +1,4 @@
+dvc
+jellyfish
+rdflib
+owlready2
