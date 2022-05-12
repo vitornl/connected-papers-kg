@@ -14,8 +14,10 @@ def parse_related_work(driver, url, paper_id, paper_name):
     current_url = driver.current_url
 
     related_work_type = current_url.split('/')[-1]
-    
-    table = driver.find_element(by=By.XPATH, value='html/body/div/div/div[2]/div[3]/div[2]/div/div/table')
+
+    table_xpath = 'html/body/div/div/div[2]/div[3]/div[2]/div/div/table'
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, table_xpath)))
+    table = driver.find_element(by=By.XPATH, value=table_xpath)
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.TAG_NAME, 'tr')))
 
     for row in table.find_elements(by=By.TAG_NAME, value='tr'):
@@ -30,7 +32,10 @@ def parse_paper_details(driver, url):
     driver.get(url)
     current_url = driver.current_url
 
-    table = driver.find_element(by=By.XPATH, value='html/body/div/div/div[2]/div[3]/div[2]/div/div/table')
+    table_xpath = 'html/body/div/div/div[2]/div[3]/div[2]/div/div/table'
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, table_xpath)))
+    table = driver.find_element(by=By.XPATH, value=table_xpath)
+
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.TAG_NAME, 'tr')))
 
     for row in table.find_elements(by=By.TAG_NAME, value='tr'):
@@ -47,9 +52,12 @@ def parse_paper_details(driver, url):
         
         authors_div = paper_abstract.find_elements(by=By.CLASS_NAME, value='metadata')[0]
         plus_authors = authors_div.find_elements(by=By.CLASS_NAME, value='plus-authors')
+        
         if len(plus_authors) > 0:
-            plus_authors[0].click()
-
+            WebDriverWait(driver, 10).until(EC.element_to_be_clickable(plus_authors[0]))
+            driver.execute_script("arguments[0].click();", plus_authors[0])
+            # WebDriverWait(driver, 10).until(EC.element_to_be_clickable(plus_authors[0])).click()
+        
         try:
             paper_name = driver.find_element(by=By.XPATH, value='/html/body/div/div/div[2]/div[3]/div[3]/div/div[2]/div[1]/div/a').text
             authors = driver.find_element(by=By.XPATH, value='/html/body/div/div/div[2]/div[3]/div[3]/div/div[2]/div[2]/div/div').text
@@ -94,19 +102,19 @@ def main():
 
         urls = [
             'https://www.connectedpapers.com/main/14f0ee2594c550de7fb5e590b322bcb1bcec8061',
-            # 'https://www.connectedpapers.com/main/00358a3f17821476d93461192b9229fe7d92bb3f',
-            # 'https://www.connectedpapers.com/main/cb2d9b2f171da67f7b47ac3e0eb935a0de223354',
-            # 'https://www.connectedpapers.com/main/d9f5ec342df97e060b527a8bc18ae4e97401f246',
-            # 'https://www.connectedpapers.com/main/75c8466a0c1c3b9fe595efc83671984ef95bd679',
-            # 'https://www.connectedpapers.com/main/861cf64943e90074cd25eada6e4c3912aef17eb0',
-            # 'https://www.connectedpapers.com/main/a8ae2d8232db04d88cf622e5fabd11da3163aa8f',
-            # 'https://www.connectedpapers.com/main/7b2ab7a828a6ae5cadffe79b1b3aa8bfbe3ae577',
-            # 'https://www.connectedpapers.com/main/123139463809b5acf98b95d4c8e958be334a32b5',
-            # 'https://www.connectedpapers.com/main/a7d5d88967a64a380ffc8e2d7c8b4e6e09dfe1bd',
-            # 'https://www.connectedpapers.com/main/9b165b8abab60c01cd1eaabf58fd427f0e9ec97d',
-            # 'https://www.connectedpapers.com/main/08ede1cbadd5c631f93c0f952ac7ca99605d8a21',
-            # 'https://www.connectedpapers.com/main/9e707dd89bba25a3dd22c96f43bd72b9b3ab94bb',
-            # 'https://www.connectedpapers.com/main/2a5a8db41940990dc8fe8e7717ed85ba043204e1'
+            'https://www.connectedpapers.com/main/00358a3f17821476d93461192b9229fe7d92bb3f',
+            'https://www.connectedpapers.com/main/cb2d9b2f171da67f7b47ac3e0eb935a0de223354',
+            'https://www.connectedpapers.com/main/d9f5ec342df97e060b527a8bc18ae4e97401f246',
+            'https://www.connectedpapers.com/main/75c8466a0c1c3b9fe595efc83671984ef95bd679',
+            'https://www.connectedpapers.com/main/861cf64943e90074cd25eada6e4c3912aef17eb0',
+            'https://www.connectedpapers.com/main/a8ae2d8232db04d88cf622e5fabd11da3163aa8f',
+            'https://www.connectedpapers.com/main/7b2ab7a828a6ae5cadffe79b1b3aa8bfbe3ae577',
+            'https://www.connectedpapers.com/main/123139463809b5acf98b95d4c8e958be334a32b5',
+            'https://www.connectedpapers.com/main/a7d5d88967a64a380ffc8e2d7c8b4e6e09dfe1bd',
+            'https://www.connectedpapers.com/main/9b165b8abab60c01cd1eaabf58fd427f0e9ec97d',
+            'https://www.connectedpapers.com/main/08ede1cbadd5c631f93c0f952ac7ca99605d8a21',
+            'https://www.connectedpapers.com/main/9e707dd89bba25a3dd22c96f43bd72b9b3ab94bb',
+            'https://www.connectedpapers.com/main/2a5a8db41940990dc8fe8e7717ed85ba043204e1'
         ]
 
         for url in urls:
@@ -119,11 +127,11 @@ if __name__ == '__main__':
 
     DATAPATH = f'{ROOTWD}/data'
     DRIVER = f'{DATAPATH}/geckodriver'
-    SCRAPED_DP = f'{DATAPATH}/scraped/test'
+    SCRAPED_DP = f'{DATAPATH}/scraped'
 
     os.makedirs(SCRAPED_DP, exist_ok=True)
     os.makedirs(f'{SCRAPED_DP}/details', exist_ok=True)
     os.makedirs(f'{SCRAPED_DP}/derivative', exist_ok=True)
     os.makedirs(f'{SCRAPED_DP}/prior', exist_ok=True)
-    
+
     main()
